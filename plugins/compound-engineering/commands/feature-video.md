@@ -193,16 +193,18 @@ ffmpeg -y -framerate 0.5 -pattern_type glob -i '.playwright-mcp/tmp/screenshots/
   -c:v libx264 -pix_fmt yuv420p -vf "scale=1280:-2" \
   tmp/videos/feature-demo.mp4
 
-# Create GIF (larger file, but works everywhere)
-ffmpeg -y -framerate 0.7 -pattern_type glob -i '.playwright-mcp/tmp/screenshots/*.png' \
-  -vf "scale=1280:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
-  -loop 0 tmp/videos/feature-demo.gif
+# Create low-quality GIF for preview (small file, for GitHub embed)
+ffmpeg -y -framerate 0.5 -pattern_type glob -i '.playwright-mcp/tmp/screenshots/*.png' \
+  -vf "scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse" \
+  -loop 0 tmp/videos/feature-demo-preview.gif
 
 # Copy screenshots to project folder for easy access
 cp -r .playwright-mcp/tmp/screenshots tmp/
 ```
 
-**Note:** The `-2` in scale ensures height is divisible by 2 (required for H.264).
+**Note:**
+- The `-2` in MP4 scale ensures height is divisible by 2 (required for H.264)
+- Preview GIF uses 640px width and 128 colors to keep file size small (~100-200KB)
 
 </record_walkthrough>
 
@@ -216,17 +218,19 @@ cp -r .playwright-mcp/tmp/screenshots tmp/
 # Check rclone is configured
 rclone listremotes
 
-# Upload video and screenshots to cloud storage
-rclone copy tmp/videos/feature-demo.mp4 r2:your-bucket/pr-videos/ --progress
-rclone copy tmp/screenshots/ r2:your-bucket/pr-videos/screenshots/ --progress
+# Upload video, preview GIF, and screenshots to cloud storage
+# Use --s3-no-check-bucket to avoid permission errors
+rclone copy tmp/videos/ r2:kieran-claude/pr-videos/pr-[number]/ --s3-no-check-bucket --progress
+rclone copy tmp/screenshots/ r2:kieran-claude/pr-videos/pr-[number]/screenshots/ --s3-no-check-bucket --progress
 
 # List uploaded files
-rclone ls r2:your-bucket/pr-videos/
+rclone ls r2:kieran-claude/pr-videos/pr-[number]/
 ```
 
-The public URL depends on your bucket configuration. For R2 with public access:
+Public URLs (R2 with public access):
 ```
-https://pub-XXXXX.r2.dev/pr-videos/feature-demo.mp4
+Video: https://pub-4047722ebb1b4b09853f24d3b61467f1.r2.dev/pr-videos/pr-[number]/feature-demo.mp4
+Preview: https://pub-4047722ebb1b4b09853f24d3b61467f1.r2.dev/pr-videos/pr-[number]/feature-demo-preview.gif
 ```
 
 </upload_video>
@@ -244,12 +248,19 @@ gh pr view [number] --json body -q '.body'
 
 If the PR already has a video section, replace it. Otherwise, append:
 
+**IMPORTANT:** GitHub cannot embed external MP4s directly. Use a clickable GIF that links to the video:
+
 ```markdown
-## Demo Video
+## Demo
 
-![Feature Demo]([video-url])
+[![Feature Demo]([preview-gif-url])]([video-mp4-url])
 
-_Walkthrough recorded with Playwright_
+*Click to view full video*
+```
+
+Example:
+```markdown
+[![Feature Demo](https://pub-4047722ebb1b4b09853f24d3b61467f1.r2.dev/pr-videos/pr-137/feature-demo-preview.gif)](https://pub-4047722ebb1b4b09853f24d3b61467f1.r2.dev/pr-videos/pr-137/feature-demo.mp4)
 ```
 
 **Update the PR:**
