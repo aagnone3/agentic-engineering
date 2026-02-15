@@ -23,7 +23,7 @@ export default defineCommand({
     to: {
       type: "string",
       default: "opencode",
-      description: "Target format (opencode | codex | droid | cursor | pi)",
+      description: "Target format (opencode | codex | droid | cursor | pi | gemini)",
     },
     output: {
       type: "string",
@@ -145,5 +145,6 @@ function resolveTargetOutputRoot(targetName: string, outputRoot: string, codexHo
   if (targetName === "pi") return piHome
   if (targetName === "droid") return path.join(os.homedir(), ".factory")
   if (targetName === "cursor") return path.join(outputRoot, ".cursor")
+  if (targetName === "gemini") return path.join(outputRoot, ".gemini")
   return outputRoot
 }

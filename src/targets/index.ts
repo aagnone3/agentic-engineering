@@ -4,16 +4,19 @@ import type { CodexBundle } from "../types/codex"
 import type { DroidBundle } from "../types/droid"
 import type { CursorBundle } from "../types/cursor"
 import type { PiBundle } from "../types/pi"
+import type { GeminiBundle } from "../types/gemini"
 import { convertClaudeToOpenCode, type ClaudeToOpenCodeOptions } from "../converters/claude-to-opencode"
 import { convertClaudeToCodex } from "../converters/claude-to-codex"
 import { convertClaudeToDroid } from "../converters/claude-to-droid"
 import { convertClaudeToCursor } from "../converters/claude-to-cursor"
 import { convertClaudeToPi } from "../converters/claude-to-pi"
+import { convertClaudeToGemini } from "../converters/claude-to-gemini"
 import { writeOpenCodeBundle } from "./opencode"
 import { writeCodexBundle } from "./codex"
 import { writeDroidBundle } from "./droid"
 import { writeCursorBundle } from "./cursor"
 import { writePiBundle } from "./pi"
+import { writeGeminiBundle } from "./gemini"
 
 export type TargetHandler<TBundle = unknown> = {
   name: string
@@ -52,5 +55,11 @@ export const targets: Record<string, TargetHandler> = {
     implemented: true,
     convert: convertClaudeToPi as TargetHandler<PiBundle>["convert"],
     write: writePiBundle as TargetHandler<PiBundle>["write"],
+  },
+  gemini: {
+    name: "gemini",
+    implemented: true,
+    convert: convertClaudeToGemini as TargetHandler<GeminiBundle>["convert"],
+    write: writeGeminiBundle as TargetHandler<GeminiBundle>["write"],
   },
 }
