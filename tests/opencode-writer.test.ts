@@ -88,18 +88,22 @@ describe("writeOpenCodeBundle", () => {
     expect(await exists(path.join(outputRoot, ".opencode"))).toBe(false)
   })
 
-  test("backs up existing opencode.json before overwriting", async () => {
+  test("merges plugin config into existing opencode.json without destroying user keys", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-backup-"))
     const outputRoot = path.join(tempRoot, ".opencode")
     const configPath = path.join(outputRoot, "opencode.json")
 
-    // Create existing config
+    // Create existing config with user keys
     await fs.mkdir(outputRoot, { recursive: true })
     const originalConfig = { $schema: "https://opencode.ai/config.json", custom: "value" }
     await fs.writeFile(configPath, JSON.stringify(originalConfig, null, 2))
 
+    // Bundle adds mcp server but keeps user's custom key
     const bundle: OpenCodeBundle = {
-      config: { $schema: "https://opencode.ai/config.json", new: "config" },
+      config: { 
+        $schema: "https://opencode.ai/config.json", 
+        mcp: { "plugin-server": { type: "local", command: "uvx", args: ["plugin-srv"] } } 
+      },
       agents: [],
       plugins: [],
       commandFiles: [],
@@ -108,9 +112,11 @@ describe("writeOpenCodeBundle", () => {
 
     await writeOpenCodeBundle(outputRoot, bundle)
 
-    // New config should be written
+    // Merged config should have both user key and plugin key
     const newConfig = JSON.parse(await fs.readFile(configPath, "utf8"))
-    expect(newConfig.new).toBe("config")
+    expect(newConfig.custom).toBe("value")  // user key preserved
+    expect(newConfig.mcp).toBeDefined()
+    expect(newConfig.mcp["plugin-server"]).toBeDefined()
 
     // Backup should exist with original content
     const files = await fs.readdir(outputRoot)
@@ -119,6 +125,81 @@ describe("writeOpenCodeBundle", () => {
 
     const backupContent = JSON.parse(await fs.readFile(path.join(outputRoot, backupFileName!), "utf8"))
     expect(backupContent.custom).toBe("value")
+  })
+
+  test("merges mcp servers without overwriting user entry", async () => {
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-merge-mcp-"))
+    const outputRoot = path.join(tempRoot, ".opencode")
+    const configPath = path.join(outputRoot, "opencode.json")
+
+    // Create existing config with user's mcp server
+    await fs.mkdir(outputRoot, { recursive: true })
+    const existingConfig = { 
+      mcp: { "user-server": { type: "local", command: "uvx", args: ["user-srv"] } } 
+    }
+    await fs.writeFile(configPath, JSON.stringify(existingConfig, null, 2))
+
+    // Bundle adds plugin server AND has conflicting user-server with different args
+    const bundle: OpenCodeBundle = {
+      config: { 
+        $schema: "https://opencode.ai/config.json",
+        mcp: { 
+          "plugin-server": { type: "local", command: "uvx", args: ["plugin-srv"] },
+          "user-server": { type: "local", command: "uvx", args: ["plugin-override"] }  // conflict
+        } 
+      },
+      agents: [],
+      plugins: [],
+      commandFiles: [],
+      skillDirs: [],
+    }
+
+    await writeOpenCodeBundle(outputRoot, bundle)
+
+    // Merged config should have both servers, with user-server keeping user's original args
+    const mergedConfig = JSON.parse(await fs.readFile(configPath, "utf8"))
+    expect(mergedConfig.mcp).toBeDefined()
+    expect(mergedConfig.mcp["plugin-server"]).toBeDefined()
+    expect(mergedConfig.mcp["user-server"]).toBeDefined()
+    expect(mergedConfig.mcp["user-server"].args[0]).toBe("user-srv")  // user wins on conflict
+    expect(mergedConfig.mcp["plugin-server"].args[0]).toBe("plugin-srv")  // plugin entry present
+  })
+
+  test("preserves unrelated user keys when merging opencode.json", async () => {
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-preserve-"))
+    const outputRoot = path.join(tempRoot, ".opencode")
+    const configPath = path.join(outputRoot, "opencode.json")
+
+    // Create existing config with multiple user keys
+    await fs.mkdir(outputRoot, { recursive: true })
+    const existingConfig = { 
+      model: "my-model",
+      theme: "dark",
+      mcp: {}
+    }
+    await fs.writeFile(configPath, JSON.stringify(existingConfig, null, 2))
+
+    // Bundle adds plugin-specific keys
+    const bundle: OpenCodeBundle = {
+      config: { 
+        $schema: "https://opencode.ai/config.json",
+        mcp: { "plugin-server": { type: "local", command: "uvx", args: ["plugin-srv"] } },
+        permission: { "bash": "allow" }
+      },
+      agents: [],
+      plugins: [],
+      commandFiles: [],
+      skillDirs: [],
+    }
+
+    await writeOpenCodeBundle(outputRoot, bundle)
+
+    // All user keys preserved
+    const mergedConfig = JSON.parse(await fs.readFile(configPath, "utf8"))
+    expect(mergedConfig.model).toBe("my-model")
+    expect(mergedConfig.theme).toBe("dark")
+    expect(mergedConfig.mcp["plugin-server"]).toBeDefined()
+    expect(mergedConfig.permission["bash"]).toBe("allow")
   })
 
   test("writes command files as .md in commands/ directory", async () => {

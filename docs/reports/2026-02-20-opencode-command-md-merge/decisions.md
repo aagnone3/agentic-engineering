@@ -127,3 +127,59 @@ for (const commandFile of bundle.commandFiles) {
 
 1. Use intermediate variable for commandDir - Rejected: caused intermittent undefined errors
 2. Use direct property reference `openCodePaths.commandDir` - Chosen: more reliable
+
+---
+
+## Decision: ADR-002 - User-Wins-On-Conflict for Config Merge
+
+**Date:** 2026-02-20  
+**Status:** Adopted
+
+## Context
+
+When merging plugin config into existing opencode.json, conflicts may occur (e.g., same MCP server name with different configuration). The merge strategy must decide which value wins.
+
+## Decision
+
+**User config wins on conflict.** When plugin and user both define the same key (MCP server name, permission, tool), the user's value takes precedence.
+
+### Rationale
+
+- Safety first: Do not overwrite user data with plugin defaults
+- Users have explicit intent in their local config
+- Plugins should add new entries without modifying user's existing setup
+- Aligns with AGENTS.md principle: "Do not delete or overwrite user data"
+
+### Merge Algorithm
+
+```typescript
+const mergedMcp = {
+  ...(incoming.mcp ?? {}),
+  ...(existing.mcp ?? {}),  // existing takes precedence
+}
+```
+
+Same pattern applied to `permission` and `tools`.
+
+### Fallback Behavior
+
+If existing `opencode.json` is malformed JSON, warn and write plugin-only config rather than crashing:
+```typescript
+} catch {
+  console.warn(`Warning: existing ${configPath} is not valid JSON. Writing plugin config without merging.`)
+  return incoming
+}
+```
+
+## Consequences
+
+- Positive: User config never accidentally overwritten
+- Positive: Plugin can add new entries without conflict
+- Negative: Plugin cannot modify user's existing server configuration (must use unique names)
+- Negative: Silent merge may mask configuration issues if user expects plugin override
+
+## Alternatives Considered
+
+1. Plugin wins on conflict - Rejected: would overwrite user data
+2. Merge and combine arrays - Rejected: MCP servers are keyed objects, not array
+3. Fail on conflict - Rejected: breaks installation workflow

@@ -1,6 +1,58 @@
 import path from "path"
-import { backupFile, copyDir, ensureDir, writeJson, writeText } from "../utils/files"
-import type { OpenCodeBundle } from "../types/opencode"
+import { backupFile, copyDir, ensureDir, pathExists, readJson, writeJson, writeText } from "../utils/files"
+import type { OpenCodeBundle, OpenCodeConfig } from "../types/opencode"
+
+// Merges plugin config into existing opencode.json. User keys win on conflict. See ADR-002.
+async function mergeOpenCodeConfig(
+  configPath: string,
+  incoming: OpenCodeConfig,
+): Promise<OpenCodeConfig> {
+  // If no existing config, write plugin config as-is
+  if (!(await pathExists(configPath))) return incoming
+
+  let existing: OpenCodeConfig
+  try {
+    existing = await readJson<OpenCodeConfig>(configPath)
+  } catch {
+    // Safety first per AGENTS.md -- do not destroy user data even if their config is malformed.
+    // Warn and fall back to plugin-only config rather than crashing.
+    console.warn(
+      `Warning: existing ${configPath} is not valid JSON. Writing plugin config without merging.`
+    )
+    return incoming
+  }
+
+  // User config wins on conflict -- see ADR-002
+  // MCP servers: add plugin entry, skip keys already in user config.
+  const mergedMcp = {
+    ...(incoming.mcp ?? {}),
+    ...(existing.mcp ?? {}), // existing takes precedence (overwrites same-named plugin entry)
+  }
+
+  // Permission: add plugin entry, skip keys already in user config.
+  const mergedPermission = incoming.permission
+    ? {
+        ...(incoming.permission),
+        ...(existing.permission ?? {}), // existing takes precedence
+      }
+    : existing.permission
+
+  // Tools: same pattern
+  const mergedTools = incoming.tools
+    ? {
+        ...(incoming.tools),
+        ...(existing.tools ?? {}),
+      }
+    : existing.tools
+
+  return {
+    ...existing,                    // all user keys preserved
+    $schema: incoming.$schema ?? existing.$schema,
+    mcp: Object.keys(mergedMcp).length > 0 ? mergedMcp : undefined,
+    permission: mergedPermission,
+    tools: mergedTools,
+  }
+}
 
 export async function writeOpenCodeBundle(outputRoot: string, bundle: OpenCodeBundle): Promise<void> {
   const openCodePaths = resolveOpenCodePaths(outputRoot)
@@ -10,7 +62,8 @@ export async function writeOpenCodeBundle(outputRoot: string, bundle: OpenCodeBu
   if (backupPath) {
     console.log(`Backed up existing config to ${backupPath}`)
   }
-  await writeJson(openCodePaths.configPath, bundle.config)
+  const merged = await mergeOpenCodeConfig(openCodePaths.configPath, bundle.config)
+  await writeJson(openCodePaths.configPath, merged)
 
   const agentsDir = openCodePaths.agentsDir
   for (const agent of bundle.agents) {
