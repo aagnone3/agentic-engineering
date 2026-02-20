@@ -233,5 +233,49 @@ Added two CLI tests cases:
 ## Alternatives Considered
 
 1. Keep "broad" as default - Rejected: pollutes user config
-2. Prompt user interactively - Rejected: breaks CLI automation
+2. Prompt user interactively - Rejected: break CLI automation
 3. Write to separate file - Rejected: OpenCode expects permissions in opencode.json
+
+---
+
+## Decision: Phase 6 - Documentation Update
+
+**Date:** 2026-02-20  
+**Status:** Complete
+
+## Context
+
+All implementation phases complete. Documentation needs to reflect the final behavior.
+
+## Decision
+
+Update AGENTS.md and README.md:
+
+### AGENTS.md Changes
+
+1. **Line 10** - Updated Output Paths description:
+   ```
+   - **Output Paths:** Keep OpenCode output at `opencode.json` and `.opencode/{agents,skills,plugins}`. For OpenCode, command go to `~/.config/opencode/commands/<name>.md`; `opencode.json` is deep-merged (never overwritten wholesale).
+   ```
+
+2. **Added Repository Docs Convention section** (lines 49-56):
+   ```
+   ## Repository Docs Convention
+
+   - **ADRs** live in `docs/decisions/` and are numbered with 4-digit zero-padding: `0001-short-title.md`, `0002-short-title.md`, etc.
+   - **Orchestrator run reports** live in `docs/reports/`.
+
+   When recording a significant decision (new provider, output format change, merge strategy), create an ADR in `docs/decisions/` following the numbering sequence.
+   ```
+
+### README.md Changes
+
+1. **Line 54** - Updated OpenCode output description:
+   ```
+   OpenCode output is written to `~/.config/opencode` by default. Command are written as individual `.md` files to `~/.config/opencode/commands/<name>.md`. Agent, skills, and plugin are written to the corresponding subdirectory alongside. `opencode.json` (MCP servers) is deep-merged into any existing file -- user keys such as `model`, `theme`, and `provider` are preserved, and user values win on conflicts. Command files are backed up before being overwritten.
+   ```
+
+## Verification
+
+- Read updated files and confirmed accuracy
+- Run `bun test` - no regression
