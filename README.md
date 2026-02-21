@@ -51,7 +51,7 @@ Local dev:
 bun run src/index.ts install ./plugins/compound-engineering --to opencode
 ```
 
-OpenCode output is written to `~/.config/opencode` by default, with `opencode.json` at the root and `agents/`, `skills/`, and `plugins/` alongside it.
+OpenCode output is written to `~/.config/opencode` by default. Command are written as individual `.md` files to `~/.config/opencode/commands/<name>.md`. Agent, skills, and plugins are written to the corresponding subdirectory alongside. `opencode.json` (MCP servers) is deep-merged into any existing file -- user keys such as `model`, `theme`, and `provider` are preserved, and user values win on conflicts. Command files are backed up before being overwritten.
 Codex output is written to `~/.codex/prompts` and `~/.codex/skills`, with each Claude command converted into both a prompt and a skill (the prompt instructs Codex to load the corresponding skill). Generated Codex skill descriptions are truncated to 1024 characters (Codex limit).
 Droid output is written to `~/.factory/` with commands, droids (agents), and skills. Claude tool names are mapped to Factory equivalents (`Bash` → `Execute`, `Write` → `Create`, etc.) and namespace prefixes are stripped from commands.
 Pi output is written to `~/.pi/agent/` by default with prompts, skills, extensions, and `compound-engineering/mcporter.json` for MCPorter interoperability.

@@ -48,8 +48,8 @@ export default defineCommand({
     },
     permissions: {
       type: "string",
-      default: "broad",
-      description: "Permission mapping: none | broad | from-commands",
+      default: "none", // Default is "none" -- writing global permissions to opencode.json pollutes user config. See ADR-003.
+      description: "Permission mapping written to opencode.json: none (default) | broad | from-command",
     },
     agentMode: {
       type: "string",
