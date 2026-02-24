@@ -1,5 +1,7 @@
 # Claude Code Plugin Marketplace
 
+**IMPORTANT: NEVER create PRs targeting EveryInc/compound-engineering-plugin (upstream). All PRs must target origin (aagnone3/agentic-engineering).**
+
 This repository is a Claude Code plugin marketplace that distributes the `agentic-engineering` plugin to developers building with AI-powered tools.
 
 ## Repository Structure
