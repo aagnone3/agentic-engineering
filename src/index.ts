@@ -8,7 +8,7 @@ import linear from "./commands/linear"
 
 const main = defineCommand({
   meta: {
-    name: "compound-plugin",
+    name: "agentic-plugin",
     version: "0.1.0",
     description: "Convert Claude Code plugins into other agent formats",
   },

@@ -1,5 +1,5 @@
 {
-  "name": "every-marketplace",
+  "name": "agentic-engineering",
   "owner": {
     "name": "Anthony Agnone",
     "url": "https://github.com/aagnone3"
@@ -10,16 +10,16 @@
   },
   "plugins": [
     {
-      "name": "compound-engineering",
+      "name": "agentic-engineering",
       "description": "AI-powered development tools that get smarter with every use. Make each unit of engineering work easier than the last. Includes 29 specialized agents, 26 commands, and 20 skills.",
       "version": "2.36.0",
       "author": {
         "name": "Anthony Agnone",
         "url": "https://github.com/aagnone3"
       },
-      "homepage": "https://github.com/aagnone3/compound-engineering-plugin",
-      "tags": ["ai-powered", "compound-engineering", "workflow-automation", "code-review", "quality", "knowledge-management", "image-generation"],
-      "source": "./plugins/compound-engineering"
+      "homepage": "https://github.com/aagnone3/agentic-engineering-plugin",
+      "tags": ["ai-powered", "agentic-engineering", "workflow-automation", "code-review", "quality", "knowledge-management", "image-generation"],
+      "source": "./plugins/agentic-engineering"
     }
   ]
 }

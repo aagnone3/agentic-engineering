@@ -1,10 +1,10 @@
 {
-  "name": "@aagnone3/compound-plugin",
+  "name": "@aagnone3/agentic-plugin",
   "version": "0.9.1",
   "type": "module",
   "private": false,
   "bin": {
-    "compound-plugin": "./src/index.ts"
+    "agentic-plugin": "./src/index.ts"
   },
   "publishConfig": {
     "access": "public"

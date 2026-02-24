@@ -1,16 +1,16 @@
 {
-  "name": "compound-engineering",
+  "name": "agentic-engineering",
   "version": "2.27.0",
-  "description": "Fixture aligned with the Compound Engineering plugin",
+  "description": "Fixture aligned with the Agentic Engineering plugin",
   "author": {
     "name": "Anthony Agnone",
     "url": "https://github.com/aagnone3"
   },
   "homepage": "https://every.to/source-code/my-ai-had-already-fixed-the-code-before-i-saw-it",
-  "repository": "https://github.com/aagnone3/compound-engineering-plugin",
+  "repository": "https://github.com/aagnone3/agentic-engineering-plugin",
   "license": "MIT",
   "keywords": [
-    "compound-engineering",
+    "agentic-engineering",
     "workflow-automation",
     "code-review",
     "agents"
