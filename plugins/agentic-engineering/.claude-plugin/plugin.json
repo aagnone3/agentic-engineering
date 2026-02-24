@@ -1,0 +1,32 @@
+{
+  "name": "agentic-engineering",
+  "version": "2.36.0",
+  "description": "AI-powered development tools. 29 agents, 26 commands, 20 skills, 1 MCP server for code review, research, design, and workflow automation.",
+  "author": {
+    "name": "Anthony Agnone",
+    "url": "https://github.com/aagnone3"
+  },
+  "homepage": "https://every.to/source-code/my-ai-had-already-fixed-the-code-before-i-saw-it",
+  "repository": "https://github.com/aagnone3/agentic-engineering-plugin",
+  "license": "MIT",
+  "keywords": [
+    "ai-powered",
+    "agentic-engineering",
+    "workflow-automation",
+    "code-review",
+    "rails",
+    "ruby",
+    "python",
+    "typescript",
+    "knowledge-management",
+    "image-generation",
+    "agent-browser",
+    "browser-automation"
+  ],
+  "mcpServers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    }
+  }
+}

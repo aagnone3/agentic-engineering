@@ -12,7 +12,7 @@
 
 ### User-Facing Goal
 
-When running `bunx @every-env/compound-plugin install compound-engineering --to opencode`, three problems exist:
+When running `bunx @every-env/compound-plugin install agentic-engineering --to opencode`, three problems exist:
 
 1. **Commands overwrite `opencode.json`**: Plugin commands are written into the `command` key of `opencode.json`, which replaces the user's existing configuration file (the writer does `writeJson(configPath, bundle.config)` — a full overwrite). The user loses their personal settings (model, theme, provider keys, MCP servers they previously configured).
 
@@ -232,7 +232,7 @@ The tests were already updated in Phase 1 to reference `bundle.commandFiles`. No
    - Assert `bundle.commandFiles.find(f => f.name === "workflows:review")` is defined.
 
 4. `"rewrites .claude/ paths to .opencode/ in command bodies"`:
-   - Find `review` in `bundle.commandFiles`, assert `content` contains `"compound-engineering.local.md"`.
+   - Find `review` in `bundle.commandFiles`, assert `content` contains `"agentic-engineering.local.md"`.
 
 5. Add NEW test: `"command .md files include description in frontmatter"`:
    - Create a minimal `ClaudePlugin` with one command (`name: "test-cmd"`, `description: "Test description"`, `body: "Do the thing"`).

@@ -1,5 +1,5 @@
 /**
- * CLI subcommand: compound-plugin linear
+ * CLI subcommand: agentic-plugin linear
  *
  * Bidirectional sync between file-based todos and Linear.
  */
