@@ -1,8 +1,8 @@
 {
   "name": "every-marketplace",
   "owner": {
-    "name": "Kieran Klaassen",
-    "url": "https://github.com/kieranklaassen"
+    "name": "Anthony Agnone",
+    "url": "https://github.com/aagnone3"
   },
   "metadata": {
     "description": "Plugin marketplace for Claude Code extensions",
@@ -14,11 +14,10 @@
       "description": "AI-powered development tools that get smarter with every use. Make each unit of engineering work easier than the last. Includes 29 specialized agents, 22 commands, and 19 skills.",
       "version": "2.35.2",
       "author": {
-        "name": "Kieran Klaassen",
-        "url": "https://github.com/kieranklaassen",
-        "email": "kieran@every.to"
+        "name": "Anthony Agnone",
+        "url": "https://github.com/aagnone3"
       },
-      "homepage": "https://github.com/EveryInc/compound-engineering-plugin",
+      "homepage": "https://github.com/aagnone3/compound-engineering-plugin",
       "tags": ["ai-powered", "compound-engineering", "workflow-automation", "code-review", "quality", "knowledge-management", "image-generation"],
       "source": "./plugins/compound-engineering"
     },
@@ -29,7 +28,7 @@
       "author": {
         "name": "Nityesh Agarwal"
       },
-      "homepage": "https://github.com/EveryInc/compound-engineering-plugin",
+      "homepage": "https://github.com/aagnone3/compound-engineering-plugin",
       "tags": ["coding", "programming", "tutorial", "learning", "spaced-repetition", "education"],
       "source": "./plugins/coding-tutor"
     }

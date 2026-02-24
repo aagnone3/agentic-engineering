@@ -225,7 +225,7 @@ async function resolveGitHubPluginPath(pluginName: string): Promise<ResolvedPlug
 function resolveGitHubSource(): string {
   const override = process.env.COMPOUND_PLUGIN_GITHUB_SOURCE
   if (override && override.trim()) return override.trim()
-  return "https://github.com/EveryInc/compound-engineering-plugin"
+  return "https://github.com/aagnone3/compound-engineering-plugin"
 }
 
 async function cloneGitHubRepo(source: string, destination: string): Promise<void> {

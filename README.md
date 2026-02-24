@@ -1,14 +1,14 @@
 # Compound Marketplace
 
-[![Build Status](https://github.com/EveryInc/compound-engineering-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/EveryInc/compound-engineering-plugin/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/@every-env/compound-plugin)](https://www.npmjs.com/package/@every-env/compound-plugin)
+[![Build Status](https://github.com/aagnone3/compound-engineering-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/aagnone3/compound-engineering-plugin/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@aagnone3/compound-plugin)](https://www.npmjs.com/package/@aagnone3/compound-plugin)
 
 A Claude Code plugin marketplace featuring the **Compound Engineering Plugin** — tools that make each unit of engineering work easier than the last.
 
 ## Claude Code Install
 
 ```bash
-/plugin marketplace add https://github.com/EveryInc/compound-engineering-plugin
+/plugin marketplace add https://github.com/aagnone3/compound-engineering-plugin
 /plugin install compound-engineering
 ```
 
@@ -24,25 +24,25 @@ This repo includes a Bun/TypeScript CLI that converts Claude Code plugins to Ope
 
 ```bash
 # convert the compound-engineering plugin into OpenCode format
-bunx @every-env/compound-plugin install compound-engineering --to opencode
+bunx @aagnone3/compound-plugin install compound-engineering --to opencode
 
 # convert to Codex format
-bunx @every-env/compound-plugin install compound-engineering --to codex
+bunx @aagnone3/compound-plugin install compound-engineering --to codex
 
 # convert to Factory Droid format
-bunx @every-env/compound-plugin install compound-engineering --to droid
+bunx @aagnone3/compound-plugin install compound-engineering --to droid
 
 # convert to Pi format
-bunx @every-env/compound-plugin install compound-engineering --to pi
+bunx @aagnone3/compound-plugin install compound-engineering --to pi
 
 # convert to Gemini CLI format
-bunx @every-env/compound-plugin install compound-engineering --to gemini
+bunx @aagnone3/compound-plugin install compound-engineering --to gemini
 
 # convert to GitHub Copilot format
-bunx @every-env/compound-plugin install compound-engineering --to copilot
+bunx @aagnone3/compound-plugin install compound-engineering --to copilot
 
 # convert to Kiro CLI format
-bunx @every-env/compound-plugin install compound-engineering --to kiro
+bunx @aagnone3/compound-plugin install compound-engineering --to kiro
 ```
 
 Local dev:
@@ -67,19 +67,19 @@ Sync your personal Claude Code config (`~/.claude/`) to other AI coding tools:
 
 ```bash
 # Sync skills and MCP servers to OpenCode
-bunx @every-env/compound-plugin sync --target opencode
+bunx @aagnone3/compound-plugin sync --target opencode
 
 # Sync to Codex
-bunx @every-env/compound-plugin sync --target codex
+bunx @aagnone3/compound-plugin sync --target codex
 
 # Sync to Pi
-bunx @every-env/compound-plugin sync --target pi
+bunx @aagnone3/compound-plugin sync --target pi
 
 # Sync to Droid (skills only)
-bunx @every-env/compound-plugin sync --target droid
+bunx @aagnone3/compound-plugin sync --target droid
 
 # Sync to GitHub Copilot (skills + MCP servers)
-bunx @every-env/compound-plugin sync --target copilot
+bunx @aagnone3/compound-plugin sync --target copilot
 ```
 
 This syncs:
