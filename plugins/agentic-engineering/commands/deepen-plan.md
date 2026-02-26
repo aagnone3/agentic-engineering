@@ -500,19 +500,24 @@ Before finalizing:
 
 ## Post-Enhancement Options
 
-After writing the enhanced plan, use the **AskUserQuestion tool** to present these options:
+<!-- AskUserQuestion constraint: 2-4 options max -->
 
-**Question:** "Plan deepened at `[plan_path]`. What would you like to do next?"
+After writing the enhanced plan, automatically show the enhancement summary and diff:
 
-**Options:**
-1. **View diff** - Show what was added/changed
-2. **Run `/technical_review`** - Get feedback from reviewers on enhanced plan
-3. **Start `/workflows:work`** - Begin implementing this enhanced plan
-4. **Deepen further** - Run another round of research on specific sections
-5. **Revert** - Restore original plan (if backup exists)
+1. Display the "Enhancement Summary" section from the updated plan
+2. Run `git diff [plan_path]` to show what changed (if tracked by git)
+
+Then use the **AskUserQuestion tool** to present these options:
+
+**Question:** "Plan deepened at `[plan_path]` (diff shown above). What would you like to do next?"
+
+**Options (4 max):**
+1. **Run `/technical_review`** - Get feedback from reviewers on enhanced plan
+2. **Start `/workflows:work`** - Begin implementing this enhanced plan
+3. **Deepen further** - Run another round of research on specific sections
+4. **Revert** - Restore original plan (if backup exists)
 
 Based on selection:
-- **View diff** → Run `git diff [plan_path]` or show before/after
 - **`/technical_review`** → Call the /technical_review command with the plan file path
 - **`/workflows:work`** → Call the /workflows:work command with the plan file path
 - **Deepen further** → Ask which sections need more research, then re-run those agents

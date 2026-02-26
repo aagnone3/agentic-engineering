@@ -565,32 +565,48 @@ Examples:
 
 ## Post-Generation Options
 
-After writing the plan file, use the **AskUserQuestion tool** to present these options:
+<!-- AskUserQuestion constraint: 2-4 options max -->
 
-**Question:** "Plan ready at `docs/plans/YYYY-MM-DD-<type>-<name>-plan.md`. What would you like to do next?"
+After writing the plan file, automatically open the plan in the user's default editor:
 
-**Options:**
-1. **Open plan in editor** - Open the plan file for review
-2. **Run `/deepen-plan`** - Enhance each section with parallel research agents (best practices, performance, UI)
-3. **Run `/technical_review`** - Technical feedback from code-focused reviewers (DHH, Kieran, Simplicity)
-4. **Review and refine** - Improve the document through structured self-review
-5. **Start `/workflows:work`** - Begin implementing this plan locally
-6. **Start `/workflows:work` on remote** - Begin implementing in Claude Code on the web (use `&` to run in background)
-7. **Create Issue** - Create issue in project tracker (GitHub/Linear)
+```bash
+open docs/plans/<plan_filename>.md
+```
+
+Then use the **AskUserQuestion tool** to present these options:
+
+**Question 1:** "Plan ready at `docs/plans/YYYY-MM-DD-<type>-<name>-plan.md` (opened in editor). What would you like to do next? (You can also type freely — e.g., 'create issue' for GitHub/Linear issue creation.)"
+
+**Options (4 max):**
+1. **Run `/deepen-plan`** - Enhance with parallel research agents (best practices, performance, UI)
+2. **Run `/technical_review`** - Technical feedback from code-focused reviewers
+3. **Start `/workflows:work`** - Begin implementing (add `&` suffix for background/remote execution)
+4. **Review and refine** - Structured self-review via `document-review` skill
 
 Based on selection:
-- **Open plan in editor** → Run `open docs/plans/<plan_filename>.md` to open the file in the user's default editor
 - **`/deepen-plan`** → Call the /deepen-plan command with the plan file path to enhance with research
 - **`/technical_review`** → Call the /technical_review command with the plan file path
+- **`/workflows:work`** → Call the /workflows:work command with the plan file path. For remote/web execution, run with `&` to start in background.
 - **Review and refine** → Load `document-review` skill.
+- **Free text** → Handle accordingly (e.g., "create issue" → see "Issue Creation" section below, other text → rework or specific changes)
+
+**Question 2 (after action completes, only if user did NOT pick `/workflows:work`):**
+
+Use the **AskUserQuestion tool** again:
+
+**Question:** "What would you like to do next?"
+
+**Options (3):**
+1. **Start `/workflows:work`** - Begin implementing this plan
+2. **Create Issue** - Create issue in project tracker (GitHub/Linear)
+3. **Continue refining** - Loop back to Question 1
+
+Based on selection:
 - **`/workflows:work`** → Call the /workflows:work command with the plan file path
-- **`/workflows:work` on remote** → Run `/workflows:work docs/plans/<plan_filename>.md &` to start work in background for Claude Code web
 - **Create Issue** → See "Issue Creation" section below
-- **Other** (automatically provided) → Accept free text for rework or specific changes
+- **Continue refining** → Loop back to Question 1
 
 **Note:** If running `/workflows:plan` with ultrathink enabled, automatically run `/deepen-plan` after plan creation for maximum depth and grounding.
-
-Loop back to options after Simplify or Other changes until user selects `/workflows:work` or `/technical_review`.
 
 ## Issue Creation
 

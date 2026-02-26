@@ -5,6 +5,14 @@ All notable changes to the agentic-engineering plugin will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.37.1] - 2026-02-25
+
+### Fixed
+
+- Fix AskUserQuestion constraint violation in `/workflows:plan` (7 options → 4+3 sequential) and `/deepen-plan` (5 → 4)
+
+---
+
 ## [2.37.0] - 2026-02-25
 
 ### Added
