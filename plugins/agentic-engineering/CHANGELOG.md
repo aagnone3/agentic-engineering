@@ -5,6 +5,18 @@ All notable changes to the agentic-engineering plugin will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.37.2] - 2026-02-26
+
+### Added
+
+- **`scripts/workflow-repo-preflight.py`** — Deterministic repo/work-start preflight for `/workflows:work` that emits JSON with current/default branch, dirty state, optional PR metadata, Linear availability, and a recommended next action/prompt.
+
+### Changed
+
+- **`/workflows:work` command** — Phase 1 setup now calls the preflight script and follows structured `recommendation.action` output instead of re-deriving branch/default-branch state from inline shell snippets.
+
+---
+
 ## [2.37.1] - 2026-02-25
 
 ### Fixed

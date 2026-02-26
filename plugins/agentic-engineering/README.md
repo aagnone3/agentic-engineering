@@ -81,7 +81,7 @@ Core workflow commands use `workflows:` prefix to avoid collisions with built-in
 | `/workflows:brainstorm` | Explore requirements and approaches before planning |
 | `/workflows:plan` | Create implementation plans |
 | `/workflows:review` | Run comprehensive code reviews |
-| `/workflows:work` | Execute work items systematically |
+| `/workflows:work` | Execute work items systematically (uses deterministic repo preflight script) |
 | `/workflows:compound` | Document solved problems to compound team knowledge |
 
 ### Utility Commands

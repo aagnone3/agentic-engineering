@@ -30,17 +30,21 @@ This command takes a work document (plan, specification, or todo file) and execu
 
 2. **Setup Environment**
 
-   First, check the current branch:
+   First, run the repo preflight script and use its JSON output as the source of truth for branch state, dirty state, PR context, and Linear availability:
 
    ```bash
-   current_branch=$(git branch --show-current)
-   default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
-
-   # Fallback if remote HEAD isn't set
-   if [ -z "$default_branch" ]; then
-     default_branch=$(git rev-parse --verify origin/main >/dev/null 2>&1 && echo "main" || echo "master")
-   fi
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/workflow-repo-preflight.py"
    ```
+
+   The script returns:
+   - `repo.current_branch`
+   - `repo.default_branch`
+   - `repo.working_tree_dirty`
+   - `github.current_branch_pr` (if `gh` is installed/authenticated)
+   - `integrations.linear_api_key_present`
+   - `recommendation.action` and `recommendation.prompt`
+
+   Follow `recommendation.action` rather than re-deriving state manually.
 
    **If already on a feature branch** (not the default branch):
    - Ask: "Continue working on `[current_branch]`, or create a new branch?"
@@ -79,7 +83,7 @@ This command takes a work document (plan, specification, or todo file) and execu
    agentic-plugin linear pull --todos-dir ./todos
    agentic-plugin linear push --file <plan-or-todo-path>
    ```
-   (Silently skips if LINEAR_API_KEY is not set)
+   (Silently skips if LINEAR_API_KEY is not set; the preflight script reports this as `integrations.linear_api_key_present`)
 
 4. **Create Todo List**
    - Use TodoWrite to break plan into actionable tasks
