@@ -90,6 +90,75 @@ describe("CLI", () => {
     ).toBe(true);
   });
 
+  test("install copies fixture plugin for Claude passthrough output", async () => {
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-claude-install-"));
+    const fixtureRoot = path.join(import.meta.dir, "fixtures", "sample-plugin");
+
+    const proc = Bun.spawn(
+      ["bun", "run", "src/index.ts", "install", fixtureRoot, "--to", "claude", "--output", tempRoot],
+      {
+        cwd: path.join(import.meta.dir, ".."),
+        stdout: "pipe",
+        stderr: "pipe",
+      }
+    );
+
+    const exitCode = await proc.exited;
+    const stdout = await new Response(proc.stdout).text();
+    const stderr = await new Response(proc.stderr).text();
+
+    if (exitCode !== 0) {
+      throw new Error(
+        `CLI failed (exit ${exitCode}).\nstdout: ${stdout}\nstderr: ${stderr}`
+      );
+    }
+
+    expect(stdout).toContain("Installed agentic-engineering");
+    expect(await exists(path.join(tempRoot, "agentic-engineering", ".claude-plugin", "plugin.json"))).toBe(true);
+    expect(await exists(path.join(tempRoot, "agentic-engineering", "agents", "agent-one.md"))).toBe(true);
+  });
+
+  test("install converts fixture plugin to Cursor output", async () => {
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-cursor-"));
+    const fixtureRoot = path.join(import.meta.dir, "fixtures", "sample-plugin");
+
+    const proc = Bun.spawn(
+      [
+        "bun",
+        "run",
+        "src/index.ts",
+        "install",
+        fixtureRoot,
+        "--to",
+        "cursor",
+        "--output",
+        tempRoot,
+      ],
+      {
+        cwd: path.join(import.meta.dir, ".."),
+        stdout: "pipe",
+        stderr: "pipe",
+      }
+    );
+
+    const exitCode = await proc.exited;
+    const stdout = await new Response(proc.stdout).text();
+    const stderr = await new Response(proc.stderr).text();
+
+    if (exitCode !== 0) {
+      throw new Error(
+        `CLI failed (exit ${exitCode}).\nstdout: ${stdout}\nstderr: ${stderr}`
+      );
+    }
+
+    expect(stdout).toContain("Installed agentic-engineering");
+    expect(await exists(path.join(tempRoot, ".cursor", "rules", "repo-research-analyst.mdc"))).toBe(true);
+    expect(await exists(path.join(tempRoot, ".cursor", "rules", "security-sentinel.mdc"))).toBe(true);
+    expect(await exists(path.join(tempRoot, ".cursor", "commands", "review.md"))).toBe(true);
+    expect(await exists(path.join(tempRoot, ".cursor", "skills", "skill-one", "SKILL.md"))).toBe(true);
+    expect(await exists(path.join(tempRoot, ".cursor", "mcp.json"))).toBe(true);
+  });
+
   test("install defaults output to ~/.config/opencode", async () => {
     const tempRoot = await fs.mkdtemp(
       path.join(os.tmpdir(), "cli-local-default-")
@@ -368,6 +437,44 @@ describe("CLI", () => {
 
     expect(stdout).toContain("Converted agentic-engineering");
     expect(await exists(path.join(tempRoot, "opencode.json"))).toBe(true);
+  });
+
+  test("convert supports explicit Claude passthrough target", async () => {
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-claude-convert-"));
+    const fixtureRoot = path.join(import.meta.dir, "fixtures", "sample-plugin");
+
+    const proc = Bun.spawn(
+      [
+        "bun",
+        "run",
+        "src/index.ts",
+        "convert",
+        fixtureRoot,
+        "--to",
+        "claude",
+        "--output",
+        tempRoot,
+      ],
+      {
+        cwd: path.join(import.meta.dir, ".."),
+        stdout: "pipe",
+        stderr: "pipe",
+      }
+    );
+
+    const exitCode = await proc.exited;
+    const stdout = await new Response(proc.stdout).text();
+    const stderr = await new Response(proc.stderr).text();
+
+    if (exitCode !== 0) {
+      throw new Error(
+        `CLI failed (exit ${exitCode}).\nstdout: ${stdout}\nstderr: ${stderr}`
+      );
+    }
+
+    expect(stdout).toContain("Converted agentic-engineering to claude");
+    expect(await exists(path.join(tempRoot, "agentic-engineering", ".claude-plugin", "plugin.json"))).toBe(true);
+    expect(await exists(path.join(tempRoot, "agentic-engineering", "commands", "command-one.md"))).toBe(true);
   });
 
   test("convert supports --codex-home for codex output", async () => {
