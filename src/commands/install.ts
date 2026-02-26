@@ -26,7 +26,7 @@ export default defineCommand({
       type: "string",
       default: "opencode",
       description:
-        "Target format (opencode | codex | droid | cursor | pi | copilot | gemini | kiro)",
+        "Target format (claude | opencode | codex | droid | cursor | pi | copilot | gemini | kiro)",
     },
     output: {
       type: "string",
@@ -219,6 +219,10 @@ function resolveTargetOutputRoot(
   if (targetName === "kiro") {
     const base = hasExplicitOutput ? outputRoot : process.cwd();
     return path.join(base, ".kiro");
+  }
+  if (targetName === "claude") {
+    const base = hasExplicitOutput ? outputRoot : process.cwd();
+    return base;
   }
   return outputRoot;
 }

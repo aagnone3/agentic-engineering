@@ -23,7 +23,7 @@ export default defineCommand({
     to: {
       type: "string",
       default: "opencode",
-      description: "Target format (opencode | codex | droid | cursor | pi | copilot | gemini | kiro)",
+      description: "Target format (claude | opencode | codex | droid | cursor | pi | copilot | gemini | kiro)",
     },
     output: {
       type: "string",

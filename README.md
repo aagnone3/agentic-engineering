@@ -26,8 +26,14 @@ This repo includes a Bun/TypeScript CLI that converts Claude Code plugins to Ope
 # convert the agentic-engineering plugin into OpenCode format
 bunx @aagnone3/agentic-plugin install agentic-engineering --to opencode
 
+# copy the plugin in Claude Code format (passthrough)
+bunx @aagnone3/agentic-plugin install agentic-engineering --to claude
+
 # convert to Codex format
 bunx @aagnone3/agentic-plugin install agentic-engineering --to codex
+
+# convert to Cursor format
+bunx @aagnone3/agentic-plugin install agentic-engineering --to cursor
 
 # convert to Factory Droid format
 bunx @aagnone3/agentic-plugin install agentic-engineering --to droid
