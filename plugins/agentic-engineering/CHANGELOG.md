@@ -5,6 +5,23 @@ All notable changes to the agentic-engineering plugin will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.37.0] - 2026-02-25
+
+### Added
+
+- **`integration-boundary-reviewer` agent** — New always-on review agent that identifies untested integration boundaries where application code calls external libraries, APIs, or services. Flags cases where tests validate shapes but not behavior (e.g., constructor arguments that the library doesn't accept, transport type mismatches, tests that fail at auth before reaching integration code). Runs automatically during `/workflows:review`.
+- **`test-strategy-reviewer` skill** — Analyze test files for coverage gaps, mock depth issues, and untested integration boundaries. Reports which functions have no tests, which tests mock at the wrong level, and which external library calls are never exercised with real objects.
+
+### Changed
+
+- **`pr-comment-resolver` agent** — Step 4 (Verify the Resolution) now includes integration verification: verify external API call signatures match the library, confirm changed code paths are actually tested, and write smoke tests for new library usage
+- **`/workflows:review` command** — Added `integration-boundary-reviewer` to the always-on agents list (alongside `agent-native-reviewer` and `learnings-researcher`)
+- **`/workflows:work` command** — Enhanced System-Wide Test Check with 6th question about external library API correctness. Added "External library smoke tests" guidance to Test Continuously section. Added Integration Boundary Verification step to Phase 3 Quality Check.
+- **`/deepen-plan` command** — Added Step 4b (Testing Strategy Research) to spawn dedicated research agents for each external library's testing patterns, constructor signatures, and anti-patterns. Added Testing Strategy section to the enhancement format.
+- **`setup` skill** — Comprehensive depth now includes `integration-boundary-reviewer`
+
+---
+
 ## [2.36.0] - 2026-02-24
 
 ### Added

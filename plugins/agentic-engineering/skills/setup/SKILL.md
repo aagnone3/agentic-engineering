@@ -130,7 +130,7 @@ options:
 **Depth:**
 - Thorough: stack + selected focus areas
 - Fast: stack + `code-simplicity-reviewer` only
-- Comprehensive: all above + `git-history-analyzer, data-integrity-guardian, agent-native-reviewer`
+- Comprehensive: all above + `git-history-analyzer, data-integrity-guardian, agent-native-reviewer, integration-boundary-reviewer`
 
 **Plan review agents:** stack-specific reviewer + `code-simplicity-reviewer`.
 

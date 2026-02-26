@@ -6,16 +6,16 @@ AI-powered development tools that get smarter with every use. Make each unit of 
 
 | Component | Count |
 |-----------|-------|
-| Agents | 29 |
+| Agents | 30 |
 | Commands | 26 |
-| Skills | 20 |
+| Skills | 21 |
 | MCP Servers | 1 |
 
 ## Agents
 
 Agents are organized into categories for easier discovery.
 
-### Review (15)
+### Review (16)
 
 | Agent | Description |
 |-------|-------------|
@@ -26,6 +26,7 @@ Agents are organized into categories for easier discovery.
 | `data-migration-expert` | Validate ID mappings match production, check for swapped values |
 | `deployment-verification-agent` | Create Go/No-Go deployment checklists for risky data changes |
 | `dhh-rails-reviewer` | Rails review from DHH's perspective |
+| `integration-boundary-reviewer` | Identify untested external library calls and integration boundary gaps |
 | `julik-frontend-races-reviewer` | Review JavaScript/Stimulus code for race conditions |
 | `kieran-rails-reviewer` | Rails code review with strict conventions |
 | `kieran-python-reviewer` | Python code review with strict conventions |
@@ -141,6 +142,12 @@ Core workflow commands use `workflows:` prefix to avoid collisions with built-in
 | `linear-sync` | Bidirectional sync between file-based todos and Linear |
 | `resolve-pr-parallel` | Resolve PR review comments in parallel |
 | `setup` | Configure which review agents run for your project |
+
+### Testing & Quality
+
+| Skill | Description |
+|-------|-------------|
+| `test-strategy-reviewer` | Analyze test files for coverage gaps, mock depth, and untested integration boundaries |
 
 ### Multi-Agent Orchestration
 

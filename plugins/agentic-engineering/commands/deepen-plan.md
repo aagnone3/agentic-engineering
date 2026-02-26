@@ -295,6 +295,27 @@ mcp__plugin_agentic-engineering_context7__query-docs: Query documentation for sp
 
 Search for recent (2024-2026) articles, blog posts, and documentation on topics in the plan.
 
+### 4b. Testing Strategy Research
+
+For each external library mentioned in the plan, spawn a dedicated research agent:
+
+```
+Task Explore: "Research testing patterns for [library name].
+Find:
+- The library's recommended testing approach (in-process vs mock vs fixture)
+- Constructor signatures and required arguments
+- Common testing pitfalls and anti-patterns
+- Example integration tests from the library's own test suite or docs
+Return concrete test code examples."
+```
+
+Also query Context7 for framework-specific testing documentation:
+
+```
+mcp__plugin_agentic-engineering_context7__resolve-library-id: Find library ID for [library]
+mcp__plugin_agentic-engineering_context7__query-docs: Query testing patterns and examples
+```
+
 ### 5. Discover and Run ALL Review Agents
 
 <thinking>
@@ -428,6 +449,11 @@ Merge research findings back into the plan, adding depth without changing the or
 **References:**
 - [Documentation URL 1]
 - [Documentation URL 2]
+
+**Testing Strategy** (when section involves external libraries):
+- Integration boundaries: [Library 1] constructor pattern, [Library 2] recommended test approach
+- Recommended integration tests: concrete test examples from library docs/research
+- Testing anti-patterns to avoid: [Anti-pattern and why it's dangerous]
 ```
 
 ### 8. Add Enhancement Summary

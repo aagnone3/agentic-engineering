@@ -49,6 +49,24 @@ When you receive a comment or review feedback, you will:
    - Ensure no unintended modifications were made
    - Verify the code still follows project conventions
 
+   **Integration verification (when your fix touches external libraries):**
+
+   a. **Verify external API calls**: If your fix calls a library function or
+      constructor, verify the function signature actually accepts the arguments
+      you're passing. Run the language-appropriate check:
+      - Python: `python -c "import X; help(X.ClassName.__init__)"`
+      - Ruby: `bundle exec ruby -e "require 'X'; puts X::ClassName.instance_method(:initialize).parameters"`
+      - TypeScript/JS: Check the library's type definitions or documentation
+      - Or use Context7 MCP: resolve the library ID, then query its constructor docs
+
+   b. **Verify the changed code path is tested**: If you modified a function,
+      confirm that at least one test actually executes the lines you changed.
+      If no existing test reaches your code, write one.
+
+   c. **For new library usage**: If you introduced a new import or constructor
+      call, write a minimal smoke test that actually constructs the object.
+      Don't assume the test suite covers it just because tests pass.
+
 5. **Report the Resolution**: Provide a clear, concise summary that includes:
    - What was changed (file names and brief description)
    - How it addresses the reviewer's comment

@@ -117,6 +117,7 @@ This command takes a work document (plan, specification, or todo file) and execu
    | **Can failure leave orphaned state?** If your code persists state (DB row, cache, file) before calling an external service, what happens when the service fails? Does retry create duplicates? | Trace the failure path with real objects. If state is created before the risky call, test that failure cleans up or that retry is idempotent. |
    | **What other interfaces expose this?** Mixins, DSLs, alternative entry points (Agent vs Chat vs ChatMethods). | Grep for the method/behavior in related classes. If parity is needed, add it now — not as a follow-up. |
    | **Do error strategies align across layers?** Retry middleware + application fallback + framework error handling — do they conflict or create double execution? | List the specific error classes at each layer. Verify your rescue list matches what the lower layer actually raises. |
+   | **Does your code call an external library correctly?** If you import `X` and call `X.Y(args)`, are those args actually accepted by `Y`? Does the test suite exercise that call with real objects, or does it only test code *around* the call? | Run `help(X.Y)` or check the library's type stubs. If no test constructs a real `X.Y(...)`, write a smoke test. Passing tests that never reach the library call prove nothing about the integration. |
 
    **When to skip:** Leaf-node changes with no callbacks, no state persistence, no parallel interfaces. If the change is purely additive (new helper method, new view partial), the check takes 10 seconds and the answer is "nothing fires, skip."
 
@@ -168,6 +169,7 @@ This command takes a work document (plan, specification, or todo file) and execu
    - Fix failures immediately
    - Add new tests for new functionality
    - **Unit tests with mocks prove logic in isolation. Integration tests with real objects prove the layers work together.** If your change touches callbacks, middleware, or error handling — you need both.
+   - **External library smoke tests**: If you introduced a new library import or constructor call, write at least one test that constructs the real object with representative arguments. This catches API mismatches (wrong kwargs, missing parameters) that unit tests with mocks will never find.
 
 5. **Figma Design Sync** (if applicable)
 
@@ -198,13 +200,28 @@ This command takes a work document (plan, specification, or todo file) and execu
    # Use linting-agent before pushing to origin
    ```
 
-2. **Consider Reviewer Agents** (Optional)
+2. **Integration Boundary Verification**
+
+   Before submitting, for each external library call introduced or modified:
+
+   a. **Identify integration boundaries**: Any `import` from an external package followed by a constructor or function call.
+
+   b. **Verify at least one test exercises each boundary** with:
+      - Real object construction (not a mock)
+      - Representative arguments matching the library's actual API
+      - Expected behavior assertion
+
+   c. **For network-dependent code**: Use in-process servers, test fixtures, or localhost servers rather than mocking the entire library away.
+
+   d. **Smoke test before committing**: If the feature has a UI or API endpoint, hit it once manually or via curl to verify it works end-to-end, not just in unit tests.
+
+3. **Consider Reviewer Agents** (Optional)
 
    Use for complex, risky, or large changes. Read agents from `agentic-engineering.local.md` frontmatter (`review_agents`). If no settings file, invoke the `setup` skill to create one.
 
    Run configured agents in parallel with Task tool. Present findings and address critical issues.
 
-3. **Final Validation**
+4. **Final Validation**
    - All TodoWrite tasks marked completed
    - All tests pass
    - Linting passes
@@ -212,7 +229,7 @@ This command takes a work document (plan, specification, or todo file) and execu
    - Figma designs match (if applicable)
    - No console errors or warnings
 
-4. **Prepare Operational Validation Plan** (REQUIRED)
+5. **Prepare Operational Validation Plan** (REQUIRED)
    - Add a `## Post-Deploy Monitoring & Validation` section to the PR description for every change.
    - Include concrete:
      - Log queries/search terms
